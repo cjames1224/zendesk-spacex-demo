@@ -1,0 +1,216 @@
+{
+  "macros": [
+    {
+      "title": "When is the next launch?",
+      "actions": [
+        {
+          "field": "comment_value",
+          "value": "The next SpaceX launch is scheduled for {{launch_date}}. You can find the latest schedule at https://www.spacex.com/launches/."
+        }
+      ],
+      "active": true,
+      "id": 43245438642579
+    },
+    {
+      "title": "Where can I watch the stream?",
+      "actions": [
+        {
+          "field": "comment_value",
+          "value": "You can watch the live stream of our launches at https://www.spacex.com/launches/ or on our official YouTube channel."
+        }
+      ],
+      "active": true,
+      "id": 43245409952531
+    },
+    {
+      "title": "What if I have a product malfunction?",
+      "actions": [
+        {
+          "field": "comment_value",
+          "value": "If you are experiencing a product malfunction, please provide your product type and serial number. Our technical support team will assist you as soon as possible."
+        },
+        {
+          "field": "status",
+          "value": "open"
+        }
+      ],
+      "active": true,
+      "id": 43245423030035
+    }
+  ],
+  "views": [
+    {
+      "title": "Launch-Related Tickets",
+      "all": [
+        {
+          "field": "status",
+          "operator": "is",
+          "value": "open"
+        }
+      ],
+      "output": {
+        "columns": [
+          "subject",
+          "status",
+          "tags"
+        ]
+      },
+      "id": 43245696077587
+    },
+    {
+      "title": "High Priority Issues",
+      "all": [
+        {
+          "field": "status",
+          "operator": "is",
+          "value": "open"
+        },
+        {
+          "field": "priority",
+          "operator": "is",
+          "value": "high"
+        }
+      ],
+      "output": {
+        "columns": [
+          "subject",
+          "priority",
+          "status"
+        ]
+      },
+      "id": 43245666525075
+    },
+    {
+      "title": "Tickets Missing Product Type",
+      "all": [
+        {
+          "field": "status",
+          "operator": "is",
+          "value": "open"
+        },
+        {
+          "field": "43245759856275",
+          "operator": "is",
+          "value": "miscellaneous"
+        }
+      ],
+      "output": {
+        "columns": [
+          "subject",
+          "status",
+          "product_type"
+        ]
+      }
+    },
+    {
+      "title": "SpaceX Mission Details",
+      "all": [
+        {
+          "field": "status",
+          "operator": "is",
+          "value": "open"
+        }
+      ],
+      "output": {
+        "columns": [
+          "subject",
+          "status",
+          "custom_fields.mission_name",
+          "created_at"
+        ]
+      },
+      "id": 43245654214163
+    }
+  ],
+  "custom_objects": [
+    {
+      "key": "launch_event",
+      "name": "Launch Event",
+      "title": "Launch Event",
+      "title_pluralized": "Launch Events",
+      "description": "A SpaceX launch event",
+      "schema": {
+        "properties": {
+          "launch_date": {
+            "type": "string"
+          },
+          "starship": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "mission_name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "launch_date",
+          "starship",
+          "status",
+          "region",
+          "mission_name"
+        ]
+      },
+      "sample_entries": [
+        {
+          "launch_date": "2024-07-15",
+          "starship": "Falcon 9",
+          "status": "Scheduled",
+          "region": "Florida",
+          "mission_name": "Starlink 8-1"
+        },
+        {
+          "launch_date": "2024-08-02",
+          "starship": "Falcon Heavy",
+          "status": "Scheduled",
+          "region": "California",
+          "mission_name": "Artemis Gateway"
+        },
+        {
+          "launch_date": "2024-09-10",
+          "starship": "Starship",
+          "status": "Planned",
+          "region": "Texas",
+          "mission_name": "Mars Cargo Demo"
+        }
+      ],
+      "id": "launch_event"
+    },
+    {
+      "key": "customer_tier",
+      "name": "Customer Tier",
+      "title": "Customer Tier",
+      "title_pluralized": "Customer Tiers",
+      "description": "A customer tier object",
+      "schema": {
+        "properties": {
+          "tier_name": {
+            "type": "string"
+          },
+          "benefits": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "tier_name",
+          "benefits"
+        ]
+      },
+      "sample_entries": [
+        {
+          "tier_name": "VIP",
+          "benefits": "Priority support, exclusive updates"
+        },
+        {
+          "tier_name": "Standard",
+          "benefits": "Standard support"
+        }
+      ],
+      "id": "customer_tier"
+    }
+  ]
+}

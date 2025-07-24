@@ -1,0 +1,12 @@
+.env
+node_modules
+package-lock.json
+package.json
+public/bundle.js
+public/index.html
+public/index.js
+public/style.css
+public/style.css.map
+public/style.css.map.gz
+public/style.css.map.gz.br
+public/style.css.map.gz.br.gz
