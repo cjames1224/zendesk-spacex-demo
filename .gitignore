@@ -10,3 +10,9 @@ public/style.css.map
 public/style.css.map.gz
 public/style.css.map.gz.br
 public/style.css.map.gz.br.gz
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

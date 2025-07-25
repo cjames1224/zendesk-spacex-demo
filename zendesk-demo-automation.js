@@ -3,13 +3,16 @@ require('dotenv').config();
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
+const chalk = require('chalk');
+
+console.log(chalk.cyan('Starting Zendesk Demo Automation...'));
 
 const ZENDESK_SUBDOMAIN = process.env.ZENDESK_SUBDOMAIN;
 const ZENDESK_EMAIL = process.env.ZENDESK_EMAIL;
 const ZENDESK_API_TOKEN = process.env.ZENDESK_API_TOKEN;
 
 if (!ZENDESK_SUBDOMAIN || !ZENDESK_EMAIL || !ZENDESK_API_TOKEN) {
-  console.error('Missing Zendesk credentials in .env');
+  console.error(chalk.red('✖ Missing Zendesk credentials in .env'));
   process.exit(1);
 }
 
@@ -23,8 +26,9 @@ const configPath = path.join(__dirname, 'spacex-zendesk-config.json');
 let config;
 try {
   config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+  console.log(chalk.green('✔ Loaded spacex-zendesk-config.json.'));
 } catch (err) {
-  console.error('Failed to read zendesk-config.json:', err);
+  console.error(chalk.red('✖ Failed to read spacex-zendesk-config.json:'), err);
   process.exit(1);
 }
 
@@ -39,7 +43,10 @@ async function getMacroIdByTitle(title) {
     const macro = res.data.macros.find((m) => m.title === title);
     return macro ? macro.id : null;
   } catch (err) {
-    console.error('Error fetching macros:', err.response?.data || err.message);
+    console.error(
+      chalk.red('✖ Error fetching macros:'),
+      err.response?.data || err.message
+    );
     return null;
   }
 }
@@ -50,7 +57,10 @@ async function getViewIdByTitle(title) {
     const view = res.data.views.find((v) => v.title === title);
     return view ? view.id : null;
   } catch (err) {
-    console.error('Error fetching views:', err.response?.data || err.message);
+    console.error(
+      chalk.red('✖ Error fetching views:'),
+      err.response?.data || err.message
+    );
     return null;
   }
 }
@@ -62,7 +72,9 @@ async function getCustomObjectIdByKey(key) {
     });
     if (!res.data || !Array.isArray(res.data.custom_objects)) {
       console.error(
-        'Unexpected response structure when fetching custom object types:',
+        chalk.red(
+          '✖ Unexpected response structure when fetching custom object types:'
+        ),
         JSON.stringify(res.data, null, 2)
       );
       return null;
@@ -72,11 +84,14 @@ async function getCustomObjectIdByKey(key) {
   } catch (err) {
     if (err.response && err.response.data) {
       console.error(
-        'Error fetching custom object types:',
+        chalk.red('✖ Error fetching custom object types:'),
         JSON.stringify(err.response.data, null, 2)
       );
     } else {
-      console.error('Error fetching custom object types:', err.message);
+      console.error(
+        chalk.red('✖ Error fetching custom object types:'),
+        err.message
+      );
     }
     return null;
   }
@@ -84,7 +99,11 @@ async function getCustomObjectIdByKey(key) {
 
 async function createMacro(macro, idx) {
   if (macro.id) {
-    console.log(`Macro '${macro.title}' already has id ${macro.id}, skipping.`);
+    console.log(
+      chalk.yellow(
+        `⚠ Macro '${macro.title}' already has id ${macro.id}, skipping.`
+      )
+    );
     return;
   }
   let macroId = await getMacroIdByTitle(macro.title);
@@ -92,7 +111,9 @@ async function createMacro(macro, idx) {
     config.macros[idx].id = macroId;
     saveConfig();
     console.log(
-      `Macro '${macro.title}' already exists with id ${macroId}, skipping creation.`
+      chalk.yellow(
+        `⚠ Macro '${macro.title}' already exists with id ${macroId}, skipping creation.`
+      )
     );
     return;
   }
@@ -104,19 +125,40 @@ async function createMacro(macro, idx) {
     );
     config.macros[idx].id = res.data.macro.id;
     saveConfig();
-    console.log('Macro created:', res.data.macro.id, macro.title);
-  } catch (err) {
-    console.error(
-      'Error creating macro:',
-      macro.title,
-      err.response?.data || err.message
+    console.log(
+      chalk.green('✔ Macro created:'),
+      res.data.macro.id,
+      macro.title
     );
+  } catch (err) {
+    console.error(chalk.red('✖ Error creating macro:'), macro.title);
+    if (err.response && err.response.data) {
+      // Print the full error object, including stack if available
+      console.error(
+        chalk.red('Full error object:'),
+        JSON.stringify(err, Object.getOwnPropertyNames(err), 2)
+      );
+      console.error(
+        chalk.red('Response data:'),
+        JSON.stringify(err.response.data, null, 2)
+      );
+    } else {
+      // Print the full error object, including stack if available
+      console.error(
+        chalk.red('Full error object:'),
+        JSON.stringify(err, Object.getOwnPropertyNames(err), 2)
+      );
+    }
   }
 }
 
 async function createView(view, idx) {
   if (view.id) {
-    console.log(`View '${view.title}' already has id ${view.id}, skipping.`);
+    console.log(
+      chalk.yellow(
+        `⚠ View '${view.title}' already has id ${view.id}, skipping.`
+      )
+    );
     return;
   }
   let viewId = await getViewIdByTitle(view.title);
@@ -124,7 +166,9 @@ async function createView(view, idx) {
     config.views[idx].id = viewId;
     saveConfig();
     console.log(
-      `View '${view.title}' already exists with id ${viewId}, skipping creation.`
+      chalk.yellow(
+        `⚠ View '${view.title}' already exists with id ${viewId}, skipping creation.`
+      )
     );
     return;
   }
@@ -136,11 +180,11 @@ async function createView(view, idx) {
     );
     config.views[idx].id = res.data.view.id;
     saveConfig();
-    console.log('View created:', res.data.view.id, view.title);
+    console.log(chalk.green('✔ View created:'), res.data.view.id, view.title);
   } catch (err) {
     const errorData = err.response?.data;
     console.error(
-      'Error creating view:',
+      chalk.red('✖ Error creating view:'),
       view.title,
       errorData ? JSON.stringify(errorData, null, 2) : err.message
     );
@@ -150,7 +194,9 @@ async function createView(view, idx) {
 async function createCustomObject(obj, idx) {
   if (obj.id) {
     console.log(
-      `Custom object '${obj.key}' already has id ${obj.id}, skipping.`
+      chalk.yellow(
+        `⚠ Custom object '${obj.key}' already has id ${obj.id}, skipping.`
+      )
     );
     return;
   }
@@ -159,7 +205,9 @@ async function createCustomObject(obj, idx) {
     config.custom_objects[idx].id = objId;
     saveConfig();
     console.log(
-      `Custom object '${obj.key}' already exists with id ${objId}, skipping creation.`
+      chalk.yellow(
+        `⚠ Custom object '${obj.key}' already exists with id ${objId}, skipping creation.`
+      )
     );
     return;
   }
@@ -176,7 +224,7 @@ async function createCustomObject(obj, idx) {
     };
     // Debug log for payload
     console.log(
-      'Creating custom object with payload:',
+      chalk.cyan('Creating custom object with payload:'),
       JSON.stringify(payload, null, 2)
     );
     const res = await axios.post(`${zendeskBaseUrl}/custom_objects`, payload, {
@@ -184,35 +232,46 @@ async function createCustomObject(obj, idx) {
     });
     config.custom_objects[idx].id = res.data.custom_object.key;
     saveConfig();
-    console.log('Custom object created:', res.data.custom_object.key, obj.name);
+    console.log(
+      chalk.green('✔ Custom object created:'),
+      res.data.custom_object.key,
+      obj.name
+    );
   } catch (err) {
     if (err.response && err.response.data) {
       console.error(
-        'Error creating custom object:',
+        chalk.red('✖ Error creating custom object:'),
         obj.key,
         JSON.stringify(err.response.data, null, 2)
       );
       if (err.response.data.details) {
         console.error(
-          'Details:',
+          chalk.red('Details:'),
           JSON.stringify(err.response.data.details, null, 2)
         );
       }
     } else {
-      console.error('Error creating custom object:', obj.key, err.message);
+      console.error(
+        chalk.red('✖ Error creating custom object:'),
+        obj.key,
+        err.message
+      );
     }
   }
 }
 
 (async () => {
+  console.log(chalk.cyan('Processing macros...'));
   for (const [i, macro] of (config.macros || []).entries()) {
     await createMacro(macro, i);
   }
+  console.log(chalk.cyan('Processing views...'));
   for (const [i, view] of (config.views || []).entries()) {
     await createView(view, i);
   }
+  console.log(chalk.cyan('Processing custom objects...'));
   for (const [i, obj] of (config.custom_objects || []).entries()) {
     await createCustomObject(obj, i);
   }
-  console.log('Zendesk demo automation complete.');
+  console.log(chalk.green('✔ Zendesk demo automation complete.'));
 })();

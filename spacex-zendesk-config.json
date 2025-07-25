@@ -9,7 +9,7 @@
         }
       ],
       "active": true,
-      "id": 43245438642579
+      "id": 43245453808019
     },
     {
       "title": "Where can I watch the stream?",
@@ -20,7 +20,7 @@
         }
       ],
       "active": true,
-      "id": 43245409952531
+      "id": 43245469229971
     },
     {
       "title": "What if I have a product malfunction?",
@@ -35,7 +35,110 @@
         }
       ],
       "active": true,
-      "id": 43245423030035
+      "id": 43245492820755
+    },
+    {
+      "title": "Visit Launches Page for More Info",
+      "actions": [
+        {
+          "field": "comment_value",
+          "value": "For more information on upcoming launches, please visit our launches page at https://www.spacex.com/launches/."
+        }
+      ],
+      "active": true,
+      "id": 43278246497683
+    },
+    {
+      "title": "Falcon 9 Launch Info",
+      "actions": [
+        {
+          "field": "comment_value",
+          "value": "Thanks for your interest in Falcon 9! 🚀 Our next Falcon 9 launch is scheduled soon — for the latest schedule and updates, please visit our <a href=\"https://www.spacex.com/launches/\">Launch Info page</a>."
+        }
+      ],
+      "active": true,
+      "id": 43278751580947
+    },
+    {
+      "title": "How to Watch the Livestream",
+      "actions": [
+        {
+          "field": "comment_value",
+          "value": "You can catch all of our launches live on our <a href=\"https://www.youtube.com/spacex\">official YouTube channel</a> or on the <a href=\"https://www.spacex.com/launches/\">SpaceX Launches page</a>. Streams typically begin ~15 minutes before liftoff."
+        }
+      ],
+      "active": true,
+      "id": 43278744841747
+    },
+    {
+      "title": "Weather Concerns for Launch",
+      "actions": [
+        {
+          "field": "comment_value",
+          "value": "Thanks for checking in! Weather is a key factor in all our launch decisions. We constantly monitor conditions and will announce any changes on our <a href=\"https://www.spacex.com/launches/\">Launches page</a> and social channels. Safety is our top priority — stay tuned for updates!"
+        }
+      ],
+      "active": true,
+      "id": 43278787601299
+    },
+    {
+      "title": "Static Fire Test Information",
+      "actions": [
+        {
+          "field": "comment_value",
+          "value": "A static fire test is a routine pre-launch procedure where we briefly ignite the rocket’s engines while it remains secured to the launch pad. It helps us verify that systems are functioning correctly before liftoff. Let us know if you’d like more details!"
+        }
+      ],
+      "active": true,
+      "id": 43278779624467
+    },
+    {
+      "title": "Falcon Heavy vs Falcon 9",
+      "actions": [
+        {
+          "field": "comment_value",
+          "value": "Falcon 9 and Falcon Heavy are both incredible launch vehicles. The main difference is thrust — Falcon Heavy uses three Falcon 9 boosters for higher payloads and heavier missions. You can explore specs at <a href=\"https://www.spacex.com/vehicles/\">spacex.com/vehicles</a>. Let us know if you have mission-specific questions!"
+        }
+      ],
+      "active": true,
+      "id": 43278795723027
+    },
+    {
+      "title": "Return Due to Sizing Issue",
+      "actions": [
+        {
+          "field": "comment_value",
+          "value": "Sorry to hear about the sizing mix-up. We’re happy to help with an exchange. Please send us your order number and the size you’d like instead. Once we confirm availability, we’ll walk you through the next steps."
+        }
+      ],
+      "active": true,
+      "id": 43278818998035
+    },
+    {
+      "title": "International Shipping Information",
+      "actions": [
+        {
+          "field": "comment_value",
+          "value": "Yes, we do ship internationally — including to the UK! 🌍 Shipping rates and delivery times vary based on destination, and you’ll see estimated costs at checkout. If you need help with sizing or availability, feel free to ask!"
+        }
+      ],
+      "active": true,
+      "id": 43278810945171
+    },
+    {
+      "title": "Order Update Information",
+      "actions": [
+        {
+          "field": "comment_value",
+          "value": "For updates on your order, please check our knowledgebase for detailed information on shipping durations and other related queries. If you need further assistance, feel free to reach out."
+        },
+        {
+          "field": "set_tags",
+          "value": "merch_support,shipping_updates"
+        }
+      ],
+      "active": true,
+      "id": 43278878617363
     }
   ],
   "views": [
@@ -91,7 +194,7 @@
         {
           "field": "43245759856275",
           "operator": "is",
-          "value": "miscellaneous"
+          "value": "Miscellaneous"
         }
       ],
       "output": {
@@ -100,7 +203,8 @@
           "status",
           "product_type"
         ]
-      }
+      },
+      "id": 43278507729683
     },
     {
       "title": "SpaceX Mission Details",
@@ -120,6 +224,28 @@
         ]
       },
       "id": 43245654214163
+    },
+    {
+      "title": "Return-Related Tickets",
+      "all": [
+        {
+          "field": "status",
+          "operator": "is",
+          "value": "open"
+        },
+        {
+          "field": "43278540056211",
+          "operator": "present"
+        }
+      ],
+      "output": {
+        "columns": [
+          "subject",
+          "status",
+          "custom_fields.return_number"
+        ]
+      },
+      "id": 43278787664915
     }
   ],
   "custom_objects": [
@@ -211,6 +337,38 @@
         }
       ],
       "id": "customer_tier"
+    },
+    {
+      "key": "order_return",
+      "name": "Order Return",
+      "title": "Order Return",
+      "title_pluralized": "Order Returns",
+      "description": "An order return process",
+      "schema": {
+        "properties": {
+          "return_number": {
+            "type": "string"
+          },
+          "reason_for_return": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "return_number",
+          "reason_for_return"
+        ]
+      },
+      "sample_entries": [
+        {
+          "return_number": "RMA123456",
+          "reason_for_return": "Defective item"
+        },
+        {
+          "return_number": "RMA654321",
+          "reason_for_return": "Wrong item shipped"
+        }
+      ],
+      "id": "order_return"
     }
   ]
 }

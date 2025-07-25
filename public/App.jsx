@@ -1,11 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import {
+  ClerkProvider,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from '@clerk/clerk-react';
+import { Button } from './components/Button';
+import { Tabs } from './components/Tabs';
+import { Card } from './components/Card';
 
 const PRODUCTS = [
   {
     key: 'falcon9',
     name: 'Falcon 9',
     image:
-      'https://www.spacex.com/static/images/falcon-9/desktop/Block5_Render_Desktop.png',
+      'https://airandspace.si.edu/sites/default/files/images/collection-objects/ksc-20200521-ph-kls030044large.jpg',
     description:
       'Falcon 9 is a reusable, two-stage rocket designed and manufactured by SpaceX for the reliable and safe transport of people and payloads into Earth orbit and beyond.',
   },
@@ -13,7 +23,7 @@ const PRODUCTS = [
     key: 'falconheavy',
     name: 'Falcon Heavy',
     image:
-      'https://www.spacex.com/static/images/falcon-heavy/desktop/FH_Render_Desktop.png',
+      'https://upload.wikimedia.org/wikipedia/commons/4/4b/Falcon_Heavy_Demo_Mission_%2840078828431%29.jpg',
     description:
       'Falcon Heavy is the most powerful operational rocket in the world by a factor of two, with the ability to lift into orbit nearly 64 metric tons.',
   },
@@ -21,7 +31,7 @@ const PRODUCTS = [
     key: 'starship',
     name: 'Starship',
     image:
-      'https://www.spacex.com/static/images/starship/desktop/Starship_Render_Desktop.png',
+      'https://upload.wikimedia.org/wikipedia/commons/6/6e/Starship_SN9_on_pad.jpg',
     description:
       'Starship is a fully reusable transportation system designed to carry both crew and cargo to Earth orbit, the Moon, Mars, and beyond.',
   },
@@ -35,198 +45,185 @@ const PRODUCTS = [
   },
 ];
 
-function ProductDetails({ product }) {
+function ProductSection({ product }) {
   if (!product) return null;
   return (
-    <div
+    <Card
       style={{
         marginTop: 32,
-        padding: 24,
-        borderRadius: 12,
-        background: '#f5f7fa',
-        boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        maxWidth: 600,
         marginLeft: 'auto',
         marginRight: 'auto',
-        width: '100%',
-        maxWidth: '800px',
+        background: '#fff',
       }}
     >
       <img
         src={product.image}
         alt={product.name}
-        style={{ width: 220, marginBottom: 16, borderRadius: 8 }}
+        style={{
+          width: 220,
+          marginBottom: 24,
+          borderRadius: 8,
+          background: '#f3f3f3',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+        }}
       />
-      <h2 style={{ margin: '8px 0 12px 0', color: '#222', fontWeight: 700 }}>
+      <h2
+        style={{
+          fontSize: 28,
+          fontWeight: 700,
+          color: '#222',
+          marginBottom: 8,
+          textTransform: 'uppercase',
+          letterSpacing: 2,
+        }}
+      >
         {product.name}
       </h2>
-      <p style={{ color: '#333', fontSize: 18 }}>{product.description}</p>
-    </div>
+      <p style={{ color: '#444', fontSize: 18, textAlign: 'center' }}>
+        {product.description}
+      </p>
+    </Card>
   );
 }
 
 export default function App() {
-  const [selectedKey, setSelectedKey] = useState('');
-  const [clerk, setClerk] = useState(null);
+  const [selectedKey, setSelectedKey] = useState(PRODUCTS[0].key);
+  const [publishableKey, setPublishableKey] = useState(null);
   const selectedProduct = PRODUCTS.find((p) => p.key === selectedKey);
 
   useEffect(() => {
-    // Fetch Clerk publishable key from API
     fetch('/api/clerk-key')
       .then((response) => response.json())
-      .then((data) => {
-        if (window.Clerk && data.publishableKey) {
-          const clerkInstance = window.Clerk.init({
-            publishableKey: data.publishableKey,
-          });
-          setClerk(clerkInstance);
-        }
-      })
+      .then((data) => setPublishableKey(data.publishableKey))
       .catch((error) => {
         console.error('Error fetching Clerk key:', error);
       });
   }, []);
 
-  useEffect(() => {
-    if (clerk) {
-      // Mount the sign-in component
-      clerk.mountSignIn('#clerk-sign-in');
-    }
-  }, [clerk]);
-
-  return (
-    <div style={{ background: '#fff', minHeight: '100vh', width: '100%' }}>
-      {/* Top Navigation */}
-      <nav
-        style={{
-          width: '100%',
-          background: '#f5f7fa',
-          borderBottom: '1px solid #e0e6ed',
-          padding: '0 0 0 0',
-          marginBottom: 32,
-          display: 'flex',
-          alignItems: 'center',
-          height: 64,
-          boxSizing: 'border-box',
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            height: '100%',
-            marginLeft: 32,
-          }}
-        >
-          <img
-            src="https://www.spacex.com/static/images/share.jpg"
-            alt="SpaceX Logo"
-            style={{ height: 40, borderRadius: 8, marginRight: 18 }}
-          />
-          <span
-            style={{
-              fontWeight: 700,
-              fontSize: 22,
-              color: '#222',
-              letterSpacing: 2,
-            }}
-          >
-            SpaceX Demo
-          </span>
-        </div>
-        <div
-          style={{
-            marginLeft: 'auto',
-            marginRight: 32,
-            display: 'flex',
-            gap: 32,
-            alignItems: 'center',
-          }}
-        >
-          <a
-            href="#"
-            style={{
-              color: '#222',
-              textDecoration: 'none',
-              fontWeight: 500,
-              fontSize: 17,
-            }}
-          >
-            Home
-          </a>
-          <a
-            href="#"
-            style={{
-              color: '#222',
-              textDecoration: 'none',
-              fontWeight: 500,
-              fontSize: 17,
-            }}
-          >
-            Products
-          </a>
-          <a
-            href="#"
-            style={{
-              color: '#222',
-              textDecoration: 'none',
-              fontWeight: 500,
-              fontSize: 17,
-            }}
-          >
-            About
-          </a>
-          <div id="clerk-sign-in"></div>
-        </div>
-      </nav>
-
-      {/* Main Content */}
+  if (!publishableKey) {
+    return (
       <div
         style={{
-          textAlign: 'center',
-          padding: '32px 20px 0 20px',
-          width: '100%',
-          boxSizing: 'border-box',
+          minHeight: '100vh',
+          background: '#fff',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#222',
+          fontSize: 22,
         }}
       >
-        <h1 style={{ fontWeight: 700, fontSize: 40, margin: 0, color: '#222' }}>
-          Welcome to SpaceX Demo
-        </h1>
-        <p style={{ fontSize: 20, color: '#444', margin: '24px 0' }}>
-          Experience the future of space technology.
-          <br />
-          Select a product to learn more.
-        </p>
-        <div style={{ margin: '32px 0' }}>
-          <label
-            htmlFor="product-select"
-            style={{ fontSize: 18, color: '#222', fontWeight: 500 }}
-          >
-            Choose a SpaceX Product:
-          </label>
-          <select
-            id="product-select"
-            value={selectedKey}
-            onChange={(e) => setSelectedKey(e.target.value)}
+        Loading authentication...
+      </div>
+    );
+  }
+
+  return (
+    <ClerkProvider publishableKey={publishableKey}>
+      <div style={{ minHeight: '100vh', background: '#f3f3f3', color: '#222' }}>
+        {/* Header with product tabs and Clerk login */}
+        <header
+          style={{
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '24px 48px',
+            borderBottom: '1px solid #e0e0e0',
+            background: '#fff',
+            position: 'sticky',
+            top: 0,
+            zIndex: 10,
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <img
+              src="https://www.spacex.com/static/images/share.jpg"
+              alt="SpaceX Logo"
+              style={{
+                height: 40,
+                borderRadius: 8,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+              }}
+            />
+            <span
+              style={{
+                fontWeight: 800,
+                fontSize: 24,
+                letterSpacing: 2,
+                color: '#222',
+                textTransform: 'uppercase',
+              }}
+            >
+              SpaceX
+            </span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+            <Tabs
+              tabs={PRODUCTS}
+              value={selectedKey}
+              onChange={setSelectedKey}
+            />
+            <div style={{ marginLeft: 24 }}>
+              <SignedOut>
+                <SignInButton>
+                  <Button variant="outline">Sign In</Button>
+                </SignInButton>
+              </SignedOut>
+              <SignedIn>
+                <UserButton afterSignOutUrl="/" />
+              </SignedIn>
+            </div>
+          </div>
+        </header>
+
+        {/* Landing page section */}
+        <section
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '48px 16px 0 16px',
+          }}
+        >
+          <h1
             style={{
-              marginLeft: 16,
-              fontSize: 18,
-              padding: '8px 18px',
-              borderRadius: 6,
-              border: '1px solid #c0c6cf',
-              background: '#f5f7fa',
+              fontSize: 36,
+              fontWeight: 800,
+              textAlign: 'center',
+              marginTop: 32,
+              marginBottom: 16,
+              letterSpacing: 2,
+              textTransform: 'uppercase',
               color: '#222',
             }}
           >
-            <option value="">-- Select --</option>
-            {PRODUCTS.map((p) => (
-              <option key={p.key} value={p.key}>
-                {p.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <ProductDetails product={selectedProduct} />
+            Welcome to the SpaceX Product Demo
+          </h1>
+          <p
+            style={{
+              color: '#555',
+              fontSize: 20,
+              marginBottom: 32,
+              textAlign: 'center',
+              maxWidth: 600,
+            }}
+          >
+            Explore SpaceX's family of rockets and spacecraft. Select a product
+            above to learn more about its features and capabilities.
+          </p>
+        </section>
+
+        {/* Selected product section */}
+        <section>
+          <ProductSection product={selectedProduct} />
+        </section>
       </div>
-    </div>
+    </ClerkProvider>
   );
 }
