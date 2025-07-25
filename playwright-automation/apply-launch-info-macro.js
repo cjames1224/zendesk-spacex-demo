@@ -51,9 +51,7 @@ if (!ZENDESK_URL || !ZENDESK_EMAIL || !ADMIN_PASSWORD) {
 
   // 2. Go to Views > Unassigned Tickets
   console.log(chalk.blue('Step 2: Navigating to Unassigned Tickets...'));
-  await page.goto(
-    `${ZENDESK_URL}/agent/filters/360000000000-unassigned-tickets`
-  );
+  await page.goto(`${ZENDESK_URL}/agent/filters/43204015601043`);
   await page.waitForTimeout(1500);
 
   let found = true;
@@ -76,25 +74,40 @@ if (!ZENDESK_URL || !ZENDESK_EMAIL || !ADMIN_PASSWORD) {
     }
     // Apply macro
     console.log(chalk.gray('  - Applying Falcon 9 launch info macro'));
-    await page.getByRole('button', { name: /apply macro/i }).click();
+
+    await page
+      .locator(
+        'div[data-test-id="ticket-footer-macro-menu-autocomplete-input"]'
+      )
+      .click();
     await page.waitForTimeout(400);
-    await page.getByRole('option', { name: /falcon 9 launch info/i }).click();
+    // await page.locator('li[id="downshift-25-item-5"]').click();
+    await page
+      .locator('li[role="option"]')
+      .filter({ hasText: 'Falcon 9 Launch Info' })
+      .click();
     await page.waitForTimeout(400);
     // Set status to In Progress
     console.log(chalk.gray('  - Setting status to In Progress'));
-    await page.getByRole('button', { name: /submit as/i }).click();
-    await page.getByRole('option', { name: /in progress/i }).click();
+    await page
+      .locator('button[data-test-id="submit_button-menu-button"]')
+      .click();
+    await page.waitForTimeout(300);
+    await page
+      .locator('li[role="menuitem"]')
+      .filter({ hasText: 'In Progress' })
+      .click();
     await page.waitForTimeout(300);
     // Submit
     console.log(chalk.gray('  - Submitting ticket'));
     await page.getByRole('button', { name: /submit/i }).click();
+    await page.locator('button[data-test-id="submit_button-button"]').click();
+
     await page.waitForTimeout(1000);
     ticketCount++;
     console.log(chalk.green(`  ✔ Processed ticket #${ticketCount}`));
     // Go back to Unassigned Tickets view
-    await page.goto(
-      `${ZENDESK_URL}/agent/filters/360000000000-unassigned-tickets`
-    );
+    await page.goto(`${ZENDESK_URL}/agent/filters/43204015601043`);
     await page.waitForTimeout(1000);
   }
   console.log(chalk.cyan(`Done. Processed ${ticketCount} tickets.`));
