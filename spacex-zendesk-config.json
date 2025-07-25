@@ -139,6 +139,32 @@
       ],
       "active": true,
       "id": 43278878617363
+    },
+    {
+      "title": "Starship Details and Launch Plans",
+      "actions": [
+        {
+          "field": "comment_value",
+          "value": "Starship is designed to be a fully reusable spacecraft capable of carrying both crew and cargo to a variety of destinations, including Mars, the Moon, and beyond. It is intended for missions that require high payload capacity and long-duration space travel. For the latest updates on Starship launch plans, please visit our <a href=\"https://www.spacex.com/launches/\">Launch Info page</a>."
+        },
+        {
+          "field": "set_tags",
+          "value": "launch_details,starship"
+        }
+      ],
+      "active": true,
+      "id": 43292824168211
+    },
+    {
+      "title": "Reasons for Launch Delays",
+      "actions": [
+        {
+          "field": "comment_value",
+          "value": "Launch delays can occur due to a variety of reasons, including unfavorable weather conditions, technical issues, or the need for additional checks to ensure safety. We understand that delays can be frustrating, but they are crucial for ensuring the success and safety of our missions. In the meantime, we recommend staying updated through our official channels and using the time to learn more about our missions and technology on our website."
+        }
+      ],
+      "active": true,
+      "id": 43295323310355
     }
   ],
   "views": [

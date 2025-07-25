@@ -52,13 +52,19 @@ if (!ZENDESK_URL || !ZENDESK_EMAIL || !ADMIN_PASSWORD) {
   // 2. Go to Views > Unassigned Tickets
   console.log(chalk.blue('Step 2: Navigating to Unassigned Tickets...'));
   await page.goto(`${ZENDESK_URL}/agent/filters/43204015601043`);
-  await page.waitForTimeout(1500);
+  await page.waitForTimeout(2000);
 
   let found = true;
   let ticketCount = 0;
   while (found) {
     // Find a ticket with Falcon 9 in the name
-    const ticketRow = page.locator('tr', { hasText: 'Falcon 9' }).first();
+    const ticketRow = page
+      .locator('tr')
+      .filter({
+        hasText: 'Falcon 9',
+        strict: false,
+      })
+      .first();
     found = await ticketRow.isVisible();
     if (!found) break;
     await ticketRow.click();
@@ -84,7 +90,8 @@ if (!ZENDESK_URL || !ZENDESK_EMAIL || !ADMIN_PASSWORD) {
     // await page.locator('li[id="downshift-25-item-5"]').click();
     await page
       .locator('li[role="option"]')
-      .filter({ hasText: 'Falcon 9 Launch Info' })
+      .filter({ hasText: /Falcon 9 Launch Info/i, strict: false })
+      .first()
       .click();
     await page.waitForTimeout(400);
     // Set status to In Progress
@@ -95,7 +102,8 @@ if (!ZENDESK_URL || !ZENDESK_EMAIL || !ADMIN_PASSWORD) {
     await page.waitForTimeout(300);
     await page
       .locator('li[role="menuitem"]')
-      .filter({ hasText: 'In Progress' })
+      .filter({ hasText: /In Progress/i, strict: false })
+      .first()
       .click();
     await page.waitForTimeout(300);
     // Submit
@@ -103,12 +111,12 @@ if (!ZENDESK_URL || !ZENDESK_EMAIL || !ADMIN_PASSWORD) {
     await page.getByRole('button', { name: /submit/i }).click();
     await page.locator('button[data-test-id="submit_button-button"]').click();
 
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(2000);
     ticketCount++;
     console.log(chalk.green(`  ✔ Processed ticket #${ticketCount}`));
     // Go back to Unassigned Tickets view
     await page.goto(`${ZENDESK_URL}/agent/filters/43204015601043`);
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(3000);
   }
   console.log(chalk.cyan(`Done. Processed ${ticketCount} tickets.`));
   // await browser.close(); // Uncomment to close browser automatically

@@ -350,3 +350,35 @@ node playwright-automation/apply-launch-info-macro.js
 ### Deprecated: .spec.ts Files
 
 The previous `.spec.ts` Playwright Test files are no longer used. Please use the `.js` scripts above for automation.
+
+## Video Tutorials
+
+Watch these step-by-step video guides to see the tools in action:
+
+### 1. Macro, View, and Custom Object Generator
+
+**Video**: [https://www.loom.com/share/1f063b48ad4b48df98bebcf949136d7b?sid=8cb5c06d-da95-47a1-b85e-6850baa2c2f8](https://www.loom.com/share/1f063b48ad4b48df98bebcf949136d7b?sid=8cb5c06d-da95-47a1-b85e-6850baa2c2f8)
+
+Learn how to use the `openai-zendesk-cli.js` tool to automatically generate Zendesk macros, views, and custom objects using OpenAI's language model. This video demonstrates the complete workflow from business context input to deployed Zendesk configurations.
+
+### 2. Help Desk Theme Uploader and Article Generation
+
+**Video**: [https://www.loom.com/share/768c9ebdb1d546d58da28a5cf51ab49b?sid=cd6bde18-05f3-4a3a-aa51-19eef14e3cf0](https://www.loom.com/share/768c9ebdb1d546d58da28a5cf51ab49b?sid=cd6bde18-05f3-4a3a-aa51-19eef14e3cf0)
+
+See how to deploy custom Zendesk Help Center themes and generate articles using the theme uploader and article generation features. This tutorial covers theme customization, ZIP creation, and automated content generation.
+
+### 3. Automating Ticket Management with Playwright
+
+**Video**: [https://www.loom.com/share/00097b8d4ca94a9f899ede97ecd296a2?sid=357a7cd3-d295-4a70-a314-6d1335f15229](https://www.loom.com/share/00097b8d4ca94a9f899ede97ecd296a2?sid=357a7cd3-d295-4a70-a314-6d1335f15229)
+
+Watch the `apply-launch-info-macro.js` script in action as it automatically processes unassigned tickets containing "Falcon 9", applies macros, and updates ticket status. This demonstrates bulk ticket automation with visual browser interaction.
+
+### 4. Create Light Users via Playwright
+
+**Video**: [https://www.loom.com/share/1dddd315e3b0480eb58798b6a85ad625?sid=885fa5eb-22dd-4152-93e5-48cde9db39e4](https://www.loom.com/share/1dddd315e3b0480eb58798b6a85ad625?sid=885fa5eb-22dd-4152-93e5-48cde9db39e4)
+
+See how the `create-fake-team-members.js` script automatically creates multiple Light Agent users in Zendesk. This video shows the complete process from login through user creation, including handling overlays and form interactions.
+
+---
+
+_These videos provide visual demonstrations of each tool's capabilities and can help you understand the complete workflow before running the scripts yourself._
