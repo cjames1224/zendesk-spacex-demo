@@ -320,3 +320,33 @@ The React app in `public/` can be run locally to demo and test Zendesk Messaging
 - Make sure your Zendesk account is configured to allow the Messaging SDK and that your keys are correct.
 - If you do not see the widget, check the browser console for errors and verify your environment variables.
 - The React app is intended for demo and integration testing. For production, ensure you follow Zendesk's best practices for SDK usage and authentication.
+
+## Playwright Automation Scripts
+
+This project includes two Playwright automation scripts for Zendesk in the `playwright-automation/` folder:
+
+- `create-fake-team-members.js`: Automates the creation of 5 fake Light Agent users in Zendesk.
+- `apply-launch-info-macro.js`: Processes unassigned tickets containing "Falcon 9" by assigning them, applying the "Falcon 9 launch info" macro, and submitting them as "In Progress".
+
+### Prerequisites
+
+- Node.js (v16+ recommended)
+- Playwright installed: `npm install playwright`
+- A valid `.env` file in the project root with required Zendesk credentials (see earlier sections)
+
+### How to Run
+
+These scripts are **standalone Node.js scripts** (not Playwright Test runner specs). Run them directly with Node.js:
+
+```sh
+node playwright-automation/create-fake-team-members.js
+node playwright-automation/apply-launch-info-macro.js
+```
+
+- The browser will open in headed mode so you can observe the automation.
+- You may need to complete 2FA during login (the script will wait for you).
+- Progress is logged step-by-step in the terminal with colored output.
+
+### Deprecated: .spec.ts Files
+
+The previous `.spec.ts` Playwright Test files are no longer used. Please use the `.js` scripts above for automation.
