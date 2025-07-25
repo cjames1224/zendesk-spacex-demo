@@ -6,8 +6,25 @@ const axios = require('axios');
 const FormData = require('form-data');
 
 // --- CONFIG ---
-const THEME_DIR = path.join(__dirname, './zendesk-help-center-theme');
-const ZIP_PATH = path.join(__dirname, './zendesk-help-center-theme.zip');
+// Support --folder FOLDER_RELATIVE_PATH to override theme folder
+let folderArg = null;
+const folderIndex = process.argv.indexOf('--folder');
+if (
+  folderIndex !== -1 &&
+  process.argv[folderIndex + 1] &&
+  !process.argv[folderIndex + 1].startsWith('--')
+) {
+  folderArg = process.argv[folderIndex + 1];
+}
+const THEME_DIR = path.join(
+  __dirname,
+  folderArg || './zendesk-help-center-theme'
+);
+const ZIP_PATH = path.join(
+  __dirname,
+  (folderArg ? folderArg.replace(/\/+$/, '') : 'zendesk-help-center-theme') +
+    '.zip'
+);
 const MANIFEST_PATH = path.join(THEME_DIR, 'manifest.json');
 
 const ZD_SUBDOMAIN = process.env.ZENDESK_SUBDOMAIN; // e.g. 'yoursubdomain'
@@ -235,13 +252,17 @@ async function pollJob(jobId, setLiveAfter = false) {
 function printHelp() {
   console.log('Usage:');
   console.log(
-    '  node demo-utils/zip-and-import-zendesk-theme.js                # Only zip the theme'
+    '  node demo-utils/zip-and-import-zendesk-theme.js [--folder FOLDER_RELATIVE_PATH]                # Only zip the theme'
   );
   console.log(
-    '  node demo-utils/zip-and-import-zendesk-theme.js --import       # Zip and import as new theme'
+    '  node demo-utils/zip-and-import-zendesk-theme.js [--folder FOLDER_RELATIVE_PATH] --import       # Zip and import as new theme'
   );
   console.log(
-    '  node demo-utils/zip-and-import-zendesk-theme.js --update THEME_ID  # Zip and update existing theme (increments version)'
+    '  node demo-utils/zip-and-import-zendesk-theme.js [--folder FOLDER_RELATIVE_PATH] --update THEME_ID  # Zip and update existing theme (increments version)'
+  );
+  console.log('');
+  console.log(
+    '  --folder FOLDER_RELATIVE_PATH   (optional) Use a different theme folder (default: zendesk-help-center-theme)'
   );
 }
 

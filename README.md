@@ -54,6 +54,42 @@ Automate Zendesk macros, views, and custom objects using natural language and Op
 node openai-zendesk-cli.js
 ```
 
+When you start the script, you will be prompted to choose between managing macros/views/objects or generating Help Center articles.
+
+#### Help Center Article Generation Flow
+
+This flow allows you to generate and publish multiple Help Center articles using OpenAI, based on your business context and a list of article ideas.
+
+**Step-by-step:**
+
+1. **Choose "Create Help Center Articles"** when prompted at startup.
+2. **Enter business context** (e.g., your company name, product, or support needs). This helps OpenAI tailor the articles.
+3. **Enter article prompts** as a bulleted list (one per line, starting with `-` or `*`). Example:
+   ```
+   - How to reset your password
+   - Troubleshooting login issues
+   - Understanding your billing statement
+   ```
+4. The script will fetch your existing Help Center categories. **At least one category must exist** in your Zendesk Help Center.
+5. OpenAI will generate draft articles, each with a suggested section and category.
+6. For each article:
+   - If the suggested section does not exist, you will be prompted to select a category for the new section, and the section will be created.
+   - You will review the article's title, section, category, and content.
+   - Approve or reject each article interactively.
+7. Approved articles are published to your Help Center in the appropriate section/category.
+8. A summary is shown of how many articles were created.
+
+**Requirements:**
+
+- `.env` with Zendesk and OpenAI credentials
+- At least one category in your Zendesk Help Center
+
+**Best practice:**
+
+- Use clear, specific prompts for best results.
+- Review all generated content before approving.
+- Run in a sandbox or test environment before using in production.
+
 **Prompts you for:**
 
 - A description of the macros/views/objects to add or update.
@@ -247,3 +283,40 @@ OPENAI_API_KEY=
 ## Support
 
 For questions or issues, please open an issue or contact the maintainer.
+
+---
+
+## Running the React App Locally & Zendesk Messaging SDK
+
+The React app in `public/` can be run locally to demo and test Zendesk Messaging SDK integration.
+
+### Steps to Run Locally
+
+1. **Install dependencies** (if not already):
+   ```sh
+   npm install
+   ```
+2. **Start the development server:**
+
+   ```sh
+   npm start
+   ```
+
+   By default, the app will be available at [http://localhost:3000](http://localhost:3000).
+
+3. **Environment Variables:**
+   Ensure your `.env` (or `environment.sample.txt` copied to `.env`) includes:
+
+   - `REACT_APP_ZENDESK_KEY` (your Zendesk Web Widget key)
+   - `ZENDESK_MESSAGING_AUTH_KEY` (if using authenticated messaging)
+   - Other required fields as described above
+
+4. **Accessing Zendesk Messaging SDK:**
+   - When the app is running, you should see the Zendesk Messaging window/widget appear (usually in the lower right corner).
+   - This allows you to interact with Zendesk Messaging as an end user would, using your configured Zendesk instance.
+
+### Notes
+
+- Make sure your Zendesk account is configured to allow the Messaging SDK and that your keys are correct.
+- If you do not see the widget, check the browser console for errors and verify your environment variables.
+- The React app is intended for demo and integration testing. For production, ensure you follow Zendesk's best practices for SDK usage and authentication.
